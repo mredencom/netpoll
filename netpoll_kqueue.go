@@ -12,8 +12,10 @@ import (
 )
 
 const (
-	// 最大的事件数量
-	maxWaitEventsBegin = 1 << 10
+	EventRead  Event = syscall.EV_ADD
+	EventWrite Event = syscall.EV_DELETE
+	EventErr   Event = syscall.EV_DISPATCH
+	EventNone  Event = 0
 )
 
 // Kqueue 数据结构
@@ -34,14 +36,14 @@ func KqueueCreate() (*Kqueue, error) {
 		return nil, err
 	}
 	// 初始化事件状态
-	_, err = syscall.Kevent(fd, []syscall.Kevent_t{{
-		Ident:  0,
-		Filter: syscall.EVFILT_USER,
-		Fflags: syscall.EV_ADD | syscall.EV_CLEAR,
-	}}, nil, nil)
-	if err != nil {
-		return nil, err
-	}
+	//_, err = syscall.Kevent(fd, []syscall.Kevent_t{{
+	//	Ident:  0,
+	//	Filter: syscall.EVFILT_USER,
+	//	Fflags: syscall.EV_ADD | syscall.EV_CLEAR,
+	//}}, nil, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
 	return &Kqueue{
 		fd: fd,
 		timeout: &syscall.Timespec{
